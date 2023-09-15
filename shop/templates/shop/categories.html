@@ -1,0 +1,58 @@
+{% extends "shop/layout.html"%}
+{%block body%}
+{%load static%}
+
+            <div class="page-header text-center" style="background-image: url(" {% static 'shop/images/page-header-bg.jpg' %}" )>
+                <div class="container-fluid">
+                    <h1 class="page-title">{{category}} Clothes</h1>
+                </div><!-- End .container-fluid -->
+            </div><!-- End .page-header -->
+        
+            <div class="page-content">
+                <div class="container-fluid">
+                    <div class="products">
+                        <div class="row">
+                            {%for product in products %}
+                                <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <span class="product-label label-new">New</span>
+                                            <a href="{% url 'shop:product' product.id %}">
+                                                <img src="{{product.image.url}}" alt="Product image"
+                                                    class="product-image">
+                                            </a>
+                                            <div class="product-action action-icon-top">
+                                                <a href="{%url 'shop:categories' category.id %}" data-product = {{product.id}} data-action = "add" class="  btn-product btn-cart update-cart" title="Add to cart"><span>add to
+                                                    cart</span></a>
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#">{{product.catrgory}}</a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html">{{product.title}}</a></h3>
+                                            <!-- End .product-title -->
+                                            <div class="product-price">
+                                                {{product.unit_price}}
+                                            </div><!-- End .product-price -->
+
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                            {%empty%}
+                            <h3>There are No products at the moment.</h3>
+                            {% endfor %}
+
+                        </div><!-- End .row -->
+
+
+
+                    </div><!-- End .products -->
+
+                    <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
+                </div><!-- End .container-fluid -->
+            </div><!-- End .page-content -->
+{%endblock%}
+        
+        

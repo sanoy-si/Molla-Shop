@@ -1,0 +1,58 @@
+{% extends "shop/layout.html" %}
+{%block body %}
+    <div class="page-content" style="margin-top: 20px;">
+        <div class="container">
+            <div class="product-details-top mb-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="product-gallery product-gallery-vertical">
+                            <div class="row">
+                                <figure class="product-main-image">
+                                    <img id="product-zoom" src="{{product.image.url}}"  alt="product image">
+
+                                </figure><!-- End .product-main-image -->
+
+                            </div><!-- End .row -->
+                        </div><!-- End .product-gallery -->
+                    </div><!-- End .col-md-6 -->
+
+                    <div class="col-md-6">
+                        <div class="product-details product-details-centered">
+                            <h1 class="product-title">{{product.title}}</h1><!-- End .product-title -->
+
+
+                            <div class="product-price">
+                                {{product.unit_price}}
+                            </div><!-- End .product-price -->
+
+                            <div class="product-content">
+                                <p>{{product.description}}</p>
+                            </div><!-- End .product-content -->
+
+                            <div class="product-details-action">
+                                <div class="details-action-col">
+                                    <form action = "{% url 'shop:addFromProduct' product.id%}" method = "post">
+                                        {% csrf_token %}
+                                        <div class="product-details-quantity">
+                                            <input name = quantity type="number" id="qty" class="form-control" value="1" min="1" max="{{product.inventory}}" step="1" data-decimals="0" required style = "display: inline-block;">
+                                        </div><!-- End .product-details-quantity -->
+
+                                        <button type = submit style = "display: inline-block;
+                                        border: none;
+                                        padding: 0;
+                                        margin: 0;
+                                        width: 50px;
+                                        height: 50px;
+                                      " class="btn-product btn-cart"><span>add to cart</span></button>
+
+                                     </form>
+
+                                </div><!-- End .details-action-col -->
+                            </div><!-- End .product-details-action -->
+                        </div><!-- End .product-details -->
+                    </div><!-- End .col-md-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .product-details-top -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+{% endblock  %}
