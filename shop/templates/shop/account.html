@@ -1,0 +1,86 @@
+{% extends "shop/layout.html" %}
+{% block body %}
+       <main class="main">
+        	<div class=" text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Account</h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <div class="page-content">
+            	<div class="dashboard">
+	                <div class="container">
+	                	<div class="row">
+	                		<aside class="col-md-4 col-lg-3">
+	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								    <li class="nav-item">
+								        <a class="nav-link active" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="true">Account Details</a>
+								    </li>
+									<li class="nav-item">
+								        <a class="nav-link " id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
+									</li>
+								    <li class="nav-item">
+								        <a class="nav-link" href="{% url 'shop:signout' %}">Sign Out</a>
+								    </li>
+								</ul>
+	                		</aside><!-- End .col-lg-3 -->
+	                		<div class="col-md-8 col-lg-9">
+	                			<div class="tab-content">
+								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<p>No order has been made yet.</p>
+								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div><!-- .End .tab-pane -->
+								    <div class="tab-pane fade show active" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+								    	<form action="{% url 'shop:account' customer.username %}">
+											{% csrf_token %}
+			                				<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>First Name </label>
+			                						<input type="text" name = "firstName" value = "{{customer.first_name}}" class="form-control" value =  "" required>
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Last Name *</label>
+			                						<input type="text" name = "lastName"class="form-control" value = "{{customer.last_name}}" required>
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+		            						<label>Username *</label>
+		            						<input type="text" name = "userName" class="form-control"value = "{{customer.username}}" required>
+		            						
+		                					<label>Email address *</label>
+		        							<input type="email" name = "email"class="form-control" value = "{{customer.email}}" required>
+
+											<label>Phone No </label>
+		        							<input type="phone" name = "phone"value = "{{customer.phone}}" class="form-control" >
+
+											<label>Address </label>
+		        							<input type="text" name = "address"class="form-control" value = "{{customer.address}}">
+
+											<label>Postal Code </label>
+		        							<input type="number" name = "postalCode"class="form-control" value = "{{customer.postal_code}} " autocomplete = "off" >
+
+		            						<label>Current password (leave blank to leave unchanged)</label>
+		            						<input type="password" name = "currentPassword" class="form-control">
+
+		            						<label>New password (leave blank to leave unchanged)</label>
+		            						<input type="password" name = "newPassword" class="form-control">
+
+		            						<label>Confirm new password</label>
+		            						<input type="password" name = "firstconfirmPassword"class="form-control mb-2">
+
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE CHANGES</span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+											
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+								</div>
+	                		</div><!-- End .col-lg-9 -->
+	                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+{% endblock body %}
+        

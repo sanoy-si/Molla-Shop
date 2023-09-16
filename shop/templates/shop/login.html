@@ -8,29 +8,32 @@
                     <li class="nav-item">
                         <a class="nav-link active" id="signin-tab-2"  href="{%url 'shop:login' %}"  aria-controls="signin-2" aria-selected="true">Sign In</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="register-tab-2" href="{%url 'shop:signup' %}"  aria-controls="register-2" aria-selected="false">Register</a>
-                    </li>
+                   
                 </ul>
                     <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-                        <form action="#">
+                        <form action="{% url 'shop:login' %}" method = "post">
+                            {% csrf_token %}
+                            {%if message%}
+                                <p style = "color:red;">{{message}}</p>
+                            {%endif%}
                             <div class="form-group">
-                                <label for="register-email-2">Your email address *</label>
-                                <input type="email" class="form-control" id="register-email-2" name="register-email" required>
+                                <label for="register-email-2">Username *</label>
+                                <input type="text" class="form-control" id="register-email-2" name="username" required>
                             </div><!-- End .form-group -->
 
                             <div class="form-group">
                                 <label for="register-password-2">Password *</label>
-                                <input type="password" class="form-control" id="register-password-2" name="register-password" required>
+                                <input type="password" class="form-control" id="register-password-2" name="password" required>
                             </div><!-- End .form-group -->
 
-                            <div class="form-footer">
+                            <div class="form-footer">   
                                 <button type="submit" class="btn btn-outline-primary-2">
                                     <span>Login</span>
                                     <i class="icon-long-arrow-right"></i>
                                 </button>
-
+                            <span>Already Have an Account?</span>  <a href = "{%url 'shop:signup'%}"><span style = "margin-left:10px;">Sign in</span> </a>   
                             </div><!-- End .form-footer -->
+                            
                         </form>
                     </div><!-- .End .tab-pane -->
                 </div><!-- End .tab-content -->

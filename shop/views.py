@@ -2,6 +2,10 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
+from .forms import *
 
 import json
 from .models import *
@@ -17,12 +21,47 @@ def index(request):
 
         return render(request,"shop/index.html",{'products': products})
     
-def login(request):
-    products = Product.objects.all()
-    return render(request,"shop/login.html",{'products': list(products)})
+def logIn(request):
+    if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            # Authenticate the user
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # Log in the user
+                login(request, user)
+                return redirect('shop:index')  # Replace 'home' with your desired URL
+
+            # Authentication failed, show an error message
+            else:
+                message = "Username or password is Incorrect"
+                return render(request, 'shop/login.html', {'message': message})
+
+    return render(request, 'shop/login.html')
 
 def signup(request):
-    return render(request,"shop/signup.html")
+    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            # confirmation email
+            return redirect('shop:login')  # Redirect to the login page after successful signup
+    else:
+        form = SignUpForm()
+        return render(request,"shop/signup.html",{'form':form})
+
+    return render(request,"shop/signup.html",{'form':form})
+
+
+
+def logOut(request):
+    logout(request)
+    return redirect('shop:index') 
 
 def contact(request):
     return render(request,"shop/contact.html")
@@ -47,7 +86,7 @@ def cart(request):
         for product,quantity in products:
             subtotal += (int(quantity) * int(product.unit_price)) 
         total = subtotal + subtotal * country_vat
-        return render(request,"shop/cart.html",{'products':products,'total':total,'subtotal':subtotal,'vat':f'{country_vat*100}%'})
+        return render(request,"shop/cart.html",{'products':products,'total':total,'subtotal':subtotal,'vat':country_vat*subtotal})
 
     else:
         cart = request.session["cart"]
@@ -106,8 +145,9 @@ def addFromProduct(request,productId):
 
         
 
-def account(request):
-    return HttpResponse("Coming soon!")
+def account(request,username):
+    customer = Customer.objects.get(username = username)
+    return render(request,"shop/account.html",{'customer':customer})
 
 def checkout(request):
     return render(request,"shop/checkout.html")

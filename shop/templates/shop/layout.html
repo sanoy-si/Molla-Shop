@@ -92,12 +92,23 @@
 
                     <div class="header-right">
                         <div class="wishlist">
-                            <a href="{%url 'shop:account' %}" title="account">
-                                <div class="icon">
-                                    <i class="icon-user"></i>
-                                </div>
-                                <p>Account</p>
-                            </a>
+                            {%if request.user.is_authenticated%}
+                                <a href="{%url 'shop:account' request.user.username %}" title="account">
+                                    <div class="icon">
+                                        <i class="icon-user"></i>
+                                    </div>
+                                    <p>Account</p>
+                                </a>
+                            
+                            {%else%}
+                                <a href="{%url 'shop:login' %}" title="Login">
+                                    <div class="icon">
+                                        <i class="icon-user"></i>
+                                    </div>
+                                    <p>Login</p>
+                                </a>
+                            {%endif%}
+
                         </div><!-- End .dropdown -->
 
                         <div class="dropdown cart-dropdown">
@@ -143,12 +154,7 @@
                                 <li  {% if "/" == request.path%} class="megamenu-container active" {% endif%}>
                                     <a href="{% url 'shop:index'%}" class="">Home</a>
                                 </li>
-                                <li  {% if "signup" in request.path%} class="megamenu-container active" {% endif%}>
-                                    <a href="{% url 'shop:signup'%}"" class="">Sign Up</a>
-                                </li>
-                                <li  {% if "login" in request.path%} class="megamenu-container active" {% endif%}>
-                                    <a href="{% url 'shop:login'%}"" class="">Log in</a>
-                                </li>
+                              
                                 <li  {% if "about" in request.path%} class="megamenu-container active" {% endif%}>
                                     <a href="{% url 'shop:about'%}"" class="">About</a>
                                 </li>

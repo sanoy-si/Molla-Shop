@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
@@ -21,10 +22,7 @@ class Product(models.Model):
         return self.title
 
 
-class Customer(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+class Customer(AbstractUser):
     phone = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=10)
