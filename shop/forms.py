@@ -8,15 +8,19 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'confirm-password'}),
         required=True
     )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = True
     class Meta:
         model = Customer
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'register-email-2'}),
-            'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control', 'id': 'register-password-2'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"email"}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control', 'id': 'register-password-2','type':"password"}),
         }
 
 
