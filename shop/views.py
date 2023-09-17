@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
@@ -146,8 +146,41 @@ def addFromProduct(request,productId):
         
 
 def account(request,username):
-    customer = Customer.objects.get(username = username)
-    return render(request,"shop/account.html",{'customer':customer})
+    customerInstance = get_object_or_404(Customer,id = request.user.id)
+
+    if request.method == "POST":
+        form = EditForm(request.POST,instance = customerInstance)
+        if form.is_valid():
+            phone = request.POST.get("phone")
+            address = request.POST.get("address")
+            postal_code = request.POST.get("postal_code")
+            current_password = request.POST.get("current_password")
+            new_password = request.POST.get("new_password")
+            confirm_password = request.POST.get("confirm_password")
+
+            if phone:customerInstance.phone = phone
+            if address:customerInstance.address = address
+            if postal_code:customerInstance.postal_code = postal_code
+            if current_password:
+                user = authenticate(username=form.cleaned_data["username"],password = current_password)
+                if not customerInstance.check_password(current_password):
+                    passmessage = "Wrong password" 
+                    return render(request,"shop/account.html",{'form':form,'passmessage':passmessage,'customer':customerInstance})
+            if new_password:
+                if not current_password:
+                    passmessage = "Enter the current password "
+                    return render (request,"shop/account.html",{'form':form,'passmessage':passmessage,'customer':customerInstance})
+
+                if new_password != confirm_password:
+                    confmessage = "Password Doedn't match"
+                    return render (request,"shop/account.html",{'form':form,'confmessage':confmessage,'customer':customerInstance})
+                customerInstance.set_password(new_password)
+                customerInstance.save()
+                # login(request,customerInstance)
+            customerInstance.save()
+            return redirect("shop:login")
+    else:form = EditForm(instance = customerInstance)
+    return render(request,"shop/account.html",{'form':form,'customer':customerInstance})
 
 def checkout(request):
     return render(request,"shop/checkout.html")

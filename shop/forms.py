@@ -66,3 +66,18 @@ class LoginForm(forms.Form):
                 raise forms.ValidationError("Invalid username or password.")
 
         return cleaned_data
+    
+class EditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = True
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'username', 'email']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"email"}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
+        }

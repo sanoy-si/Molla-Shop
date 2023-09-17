@@ -30,25 +30,35 @@
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
 								    </div><!-- .End .tab-pane -->
 								    <div class="tab-pane fade show active" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="{% url 'shop:account' customer.username %}">
+								    	<form action="{% url 'shop:account' request.user.username %}" method = 'post'>
 											{% csrf_token %}
 			                				<div class="row">
 			                					<div class="col-sm-6">
 			                						<label>First Name </label>
-			                						<input type="text" name = "firstName" value = "{{customer.first_name}}" class="form-control" value =  "" required>
+													{{form.first_name}}
+			                						{% comment %} <input type="text" name = "firstName" value = "{{customer.first_name}}" class="form-control" value =  "" required> {% endcomment %}
 			                					</div><!-- End .col-sm-6 -->
 
 			                					<div class="col-sm-6">
 			                						<label>Last Name *</label>
-			                						<input type="text" name = "lastName"class="form-control" value = "{{customer.last_name}}" required>
+													{{form.last_name}}
+			                						{% comment %} <input type="text" name = "lastName"class="form-control" value = "{{customer.last_name}}" required> {% endcomment %}
 			                					</div><!-- End .col-sm-6 -->
 			                				</div><!-- End .row -->
 
 		            						<label>Username *</label>
-		            						<input type="text" name = "userName" class="form-control"value = "{{customer.username}}" required>
+											{{form.username}}
+											{% if form.username.errors %}
+												<div class="error" style = "color:red;">{{ form.username.errors }}</div>
+											{% endif %}
+		            						{% comment %} <input type="text" name = "userName" class="form-control"value = "{{customer.username}}" required> {% endcomment %}
 		            						
 		                					<label>Email address *</label>
-		        							<input type="email" name = "email"class="form-control" value = "{{customer.email}}" required>
+											{{form.email}}
+											{% if form.email.errors %}
+												<div class="error" style = "color:red;">{{ form.email.errors }}</div>
+											{% endif %}
+		        							{% comment %} <input type="email" name = "email"class="form-control" value = "{{customer.email}}" required> {% endcomment %}
 
 											<label>Phone No </label>
 		        							<input type="phone" name = "phone"value = "{{customer.phone}}" class="form-control" >
@@ -57,16 +67,20 @@
 		        							<input type="text" name = "address"class="form-control" value = "{{customer.address}}">
 
 											<label>Postal Code </label>
-		        							<input type="number" name = "postalCode"class="form-control" value = "{{customer.postal_code}} " autocomplete = "off" >
+		        							<input type="text" name = "postal_code"class="form-control" value = "{{customer.postal_code}} ">
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" name = "currentPassword" class="form-control">
+		            						<input type="password" name = "current_password" class="form-control">
+											<div class="error" style = "color:red;">{{ passmessage }}</div>
+
 
 		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" name = "newPassword" class="form-control">
+		            						<input type="password" name = "new_password" class="form-control">
 
 		            						<label>Confirm new password</label>
-		            						<input type="password" name = "firstconfirmPassword"class="form-control mb-2">
+		            						<input type="password" name = "confirm_password"class="form-control mb-2">
+											<div class="error" style = "color:red;">{{ confmessage }}</div>
+
 
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>
