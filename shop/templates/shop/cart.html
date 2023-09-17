@@ -23,29 +23,29 @@
                         </thead>
 
                         <tbody>
-                            {% for product,quantity in products %}
+                            {% for cart_item in cart_items %}
                                 <tr>
                                     <td class="product-col">
                                         <div class="product">
                                             <figure class="product-media">
-                                                <a href="#">
-                                                    <img src="{{product.image.url}}" alt="Product image">
+                                                <a href="{% url 'shop:product' cart_item.product.id %}">
+                                                    <img src="{{cart_item.product.image.url}}" alt="Product image">
                                                 </a>
                                             </figure>
 
                                             <h3 class="product-title">
-                                                <a href="#">{{ product.title}}</a>
+                                                <a href="{% url 'shop:product' cart_item.product.id %}">{{ cart_item.product.title}}</a>
                                             </h3><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
-                                    <td class="price-col">{{product.unit_price}}</td>
+                                    <td class="price-col">{{cart_item.product.unit_price}}</td>
                                     <td class="quantity-col">
                                         <div class="cart-product-quantity">
                                             {% comment %} <img wifdsrc = "{% static 'shop/images/icons8-up-arrow-64.png' %}" {% endcomment %}
-                                            <input type="number"  class="form-control myNumberInput" value="{{ quantity }}" min="1" max="{{ product.inventory }}" step="1" data-decimals="0" data-product = {{product.id}} required name="qua">   </div><!-- End .cart-product-quantity -->
+                                            <input type="number"  class="form-control myNumberInput" value="{{ cart_item.quantity }}" min="1" max="{{ cart_item.product.inventory }}" step="1" data-decimals="0" data-product = {{cart_item.product.id}} required name="qua">   </div><!-- End .cart-product-quantity -->
                                     </td>
-                                    <td class="total-col">{% widthratio quantity 1 product.unit_price %}</td>
-                                    <td class="remove-col"><button data-action = "remove" data-product = {{product.id}} class="btn-remove update-cart" c><i class="icon-close"></i></button></td>
+                                    <td class="total-col">{% widthratio cart_item.quantity 1 cart_item.product.unit_price %}</td>
+                                    <td class="remove-col"><button data-action = "remove" data-product = {{cart_item.product.id}} class="btn-remove update-cart" c><i class="icon-close"></i></button></td>
                                 </tr>
                             {%empty%}
                                 <h3>You have not added anything Yet.</h3>

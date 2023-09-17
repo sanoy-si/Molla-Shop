@@ -23,9 +23,9 @@ class Product(models.Model):
 
 
 class Customer(AbstractUser):
-    phone = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=10)
+    phone = models.CharField(max_length=255,null=True)
+    address = models.CharField(max_length=255,null=True)
+    postal_code = models.CharField(max_length=10,null=True)
 
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
@@ -58,11 +58,20 @@ class OrderItem(models.Model):
 
 
 
-# class Cart(models.Model):
-#     created_at = models.DateTimeField(auto_now_add=True)
+class Cart(models.Model):
+    cart_id = models.CharField(max_length=250,blank=True,primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.cart_id
 
 
-# class CartItem(models.Model):
-#     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     quantity = models.PositiveSmallIntegerField()
+class CartItem(models.Model):
+    customer = models.ForeignKey(Customer,on_delete=models.CASCADE,null=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return self.product.title
+

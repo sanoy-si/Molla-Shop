@@ -47,16 +47,16 @@
                                 </a>
 
                                 <div class="product-action action-icon-top">
-                                    <a href="{%url 'shop:index'%}" data-product = {{product.id}} data-action = "add" class="  btn-product btn-cart update-cart" title="Add to cart"><span>add to
+                                    <a href="{%url 'shop:cart' %}" data-product = {{product.id}} data-action = "add" class="  btn-product btn-cart update-cart" title="Add to cart"><span>add to
                                         cart</span></a>
                                 </div><!-- End .product-action -->
                             </figure><!-- End .product-media -->
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#">{{product.category}}</a>
+                                    <a href="{% url 'shop:categories' product.category.id %}">{{product.category}}</a>
                                 </div><!-- End .product-cat -->
-                                <h3 class="product-title"><a href="product.html">{{product.title}}</a>
+                                <h3 class="product-title"><a href="{% url 'shop:product' product.id %}">{{product.title}}</a>
                                 </h3><!-- End .product-title -->
                                 <div class="product-price">
                                     {{product.unit_price}}

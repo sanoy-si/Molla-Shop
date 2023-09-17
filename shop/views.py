@@ -1,10 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import HttpResponse
 from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import *
 
 import json
@@ -18,6 +17,7 @@ def index(request):
         limit = 2
         for category in Category.objects.all():
             products.extend(list(Product.objects.filter(category = category)[:limit]))
+        print(request.session.session_key)
 
         return render(request,"shop/index.html",{'products': products})
     
@@ -31,6 +31,45 @@ def logIn(request):
 
             if user is not None:
                 # Log in the user
+
+                products = {}
+
+                # try:
+                cart = Cart.objects.get(cart_id = _cart_id(request))
+                cart_item = CartItem.objects.filter(cart = cart)
+                for item in cart_item:
+                    products[item.product.title] = item.id
+                        
+                # except:
+                #     pass
+
+
+
+                exisiting_products = {}
+                cart_item = CartItem.objects.filter(customer__id = user.id)
+                for item in cart_item:
+                    exisiting_products[item.product.title] = item.id
+
+
+                print(exisiting_products,products)
+                for product in products.keys():
+                    if product in exisiting_products:
+                        print(exisiting_products,product)
+                        eitem = CartItem.objects.get(id = exisiting_products[product])
+                        nitem = CartItem.objects.get(id = products[product])
+                        eitem.quantity += nitem.quantity
+                        if eitem.product.inventory < eitem.quantity:
+                            eitem.quantity = eitem.product.inventory
+                        # item.customer = Customer.objects.get(pk = user.id)
+                        eitem.save()
+                    else:
+                        cart_item = CartItem.objects.get(id = products[product])
+                        item.customer = Customer.objects.get(id = user.id)
+                        item.save()
+
+
+
+
                 login(request, user)
                 return redirect('shop:index')  # Replace 'home' with your desired URL
 
@@ -69,81 +108,203 @@ def contact(request):
 def about(request):
     return render(request,"shop/about.html")
 
+def _cart_id(request):
+        cart = request.session.session_key
+        if  cart == None:
+            request.session.create()
+            cart = request.session.session_key
+
+        return cart
+
 def cart(request):
-    if "cart" not in request.session:
-        request.session["cart"] = dict()
 
-    if request.method == "GET":
+    if request.method != "POST":
         country_vat = 0.15
-        products = []
-        cart = request.session["cart"]
-        print(cart)
-        for productId in cart:
-
-            product =  Product.objects.get(id = int(productId))
-            products.append((product,cart[productId]))
         subtotal = 0
-        for product,quantity in products:
-            subtotal += (int(quantity) * int(product.unit_price)) 
+
+        try:
+            if request.user.is_authenticated:
+                cart_items = CartItem.objects.filter(customer__id = request.user.id)
+
+            else:
+                cart = Cart.objects.get(cart_id = _cart_id(request))
+                cart_items = CartItem.objects.filter(cart = cart)
+
+            for cart_item in cart_items:
+                subtotal += (float(cart_item.product.unit_price) * cart_item.quantity)
+        except ObjectDoesNotExist:
+            cart_items = None
+            
+
         total = subtotal + subtotal * country_vat
-        return render(request,"shop/cart.html",{'products':products,'total':total,'subtotal':subtotal,'vat':country_vat*subtotal})
+        return render(request,"shop/cart.html",{'cart_items':cart_items,'total':total,'subtotal':subtotal,'vat':country_vat*subtotal})
 
     else:
-        cart = request.session["cart"]
         data = json.loads(request.body)
         productId = data['productId']
         action = data['action']
 
+        product = Product.objects.get(id = int(productId))
+        try:
+            cart = Cart.objects.get(cart_id = _cart_id(request))
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(
+                cart_id = _cart_id(request)
+            )
+        cart.save()
 
-        if action == "add":
+        if request.user.is_authenticated:
+            if action == "add":
+                print('hi')
+                try:
+                    cart_item = CartItem.objects.get(product = product, customer__id = request.user.id)
+                    cart_item.quantity += 1
+                    cart_item.save()
+                except CartItem.DoesNotExist:
+                    cart_item = CartItem.objects.create(
+                        product = product,
+                        cart = cart,
+                        quantity = 1,
+                        customer = Customer.objects.get(id = request.user.id) 
+                    )
+                    cart_item.save()
+
+                if cart_item.quantity>product.inventory:
+                    cart_item.quantity = product.inventory
+
+                return redirect("shop:cart")
+
+            elif action == "remove":
+                CartItem.objects.filter(product=product,customer__id = request.user.id).delete()
+        
+            return JsonResponse(cart.cart_id,safe=False)
+        
+        else:
+            if action == "add":
+                try:
+                    cart_item = CartItem.objects.get(product = product,cart=cart)
+                    cart_item.quantity += 1
+                    cart_item.save()
+                except CartItem.DoesNotExist:
+                    cart_item = CartItem.objects.create(
+                        product = product,
+                        cart = cart,
+                        quantity = 1
+                    )
+                    cart_item.save()
+
+                    if cart_item.quantity>product.inventory:
+                        cart_item.quantity = product.inventory
+                        
+                return redirect("shop:cart")
+
+            elif action == "remove":
+                CartItem.objects.filter(product=product,cart=cart).delete()
+
             
-            if str(productId) not in cart:
-                cart[str(productId)] = 1
-            else:
-                cart[str(productId)] += 1
-            product = Product.objects.get(pk = productId)
-            if int(cart[str(productId)]) > product.inventory:
-                cart[str(productId)] = int(product.inventory)
-
-        elif action == "remove":
-            cart.pop(productId)
-        
-
-        
-
-
-
-        request.session["cart"] = cart
-        
-
-        return JsonResponse(request.session["cart"],safe=False)
+                return JsonResponse(cart.cart_id,safe=False)
 
 def addFromProduct(request,productId):
+    
+    quantity = int(request.POST.get("quantity"))
+    product = Product.objects.get(id = int(productId))
 
-    quantity = request.POST.get("quantity")
-    if "cart" not in request.session:
-        request.session["cart"] = dict()
+    try:
+        cart = Cart.objects.get(cart_id = _cart_id(request))
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(
+                cart_id = _cart_id(request)
+                )
+        cart.save()
+    if request.user.is_authenticated:
+            
+            try:
+                cart_item = CartItem.objects.get(product = product, customer__id = request.user.id)
+                cart_item.quantity += quantity
+                cart_item.save()
+            except CartItem.DoesNotExist:
+                cart_item = CartItem.objects.create(
+                    product = product,
+                    cart = cart,
+                    quantity = quantity,
+                    customer = Customer.objects.get(id = request.user.id)
+                )
+                cart_item.save()
 
-    cart = request.session["cart"]
-    if str(productId) not in cart:
-                cart[str(productId)] = int(quantity)
+            if cart_item.quantity>product.inventory:
+                cart_item.quantity = product.inventory
+
+            return redirect(reverse("shop:product",args=[int(productId)]))
+    
     else:
-        cart[str(productId)] += int(quantity)
 
-    product = Product.objects.get(pk = productId)
-    if int(cart[str(productId)]) > product.inventory:
-        cart[str(productId)] = int(product.inventory
-)
-    request.session["cart"] = cart
+        try:
+            cart_item = CartItem.objects.get(product = product,cart=cart)
+            cart_item.quantity += quantity
+            cart_item.save()
+        except CartItem.DoesNotExist:
+            cart_item = CartItem.objects.create(
+                product = product,
+                cart = cart,
+                quantity = quantity
+            )
 
-    return redirect(reverse("shop:product",args=[int(productId)]))
-    
-    
+            cart_item.save()
 
-    
+        if cart_item.quantity>product.inventory:
+            cart_item.quantity = product.inventory
 
-
+        return redirect(reverse("shop:product",args=[int(productId)]))
         
+
+def setcart(request):
+    
+    
+    data = json.loads(request.body)
+    productId = data['productId']
+    value = data['value']
+
+    product = Product.objects.get(id = int(productId))
+
+    try:
+        cart = Cart.objects.get(cart_id = _cart_id(request))
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(
+            cart_id = _cart_id(request)
+        )
+    cart.save()
+
+    if request.user.is_authenticated:
+
+        # try:
+        cart_item = CartItem.objects.get(product = product,customer__id=request.user.id)
+        cart_item.quantity = value
+        cart_item.save()
+        # except CartItem.DoesNotExist:
+        #     cart_item = CartItem.objects.create(
+        #         product = product,
+        #         cart = cart,
+        #         quantity = value
+        #     )
+        #     cart_item.save()
+
+        return JsonResponse(cart.cart_id,safe=False)
+    else:
+        
+        # try:
+        cart_item = CartItem.objects.get(product = product,cart=cart)
+        cart_item.quantity = value
+        cart_item.save()
+        # except CartItem.DoesNotExist:
+        #     cart_item = CartItem.objects.create(
+        #         product = product,
+        #         cart = cart,
+        #         quantity = value
+        #     )
+        #     cart_item.save()
+
+        return JsonResponse(cart.cart_id,safe=False)
+
 
 def account(request,username):
     customerInstance = get_object_or_404(Customer,id = request.user.id)
@@ -194,17 +355,6 @@ def categories(request,category_id):
     products = category.products.all()
     return render(request,"shop/categories.html",{'products': list(products), 'category':category})
 
-def setcart(request):
-    
-    cart = request.session["cart"]
-    data = json.loads(request.body)
-    productId = data['productId']
-    value = data['value']
-
-    cart[str(productId)] = int(value)
-    request.session["cart"] = cart
-
-    return JsonResponse(request.session["cart"],safe=False)
 
     
 

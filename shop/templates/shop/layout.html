@@ -115,9 +115,7 @@
                             <a href="{%url 'shop:cart'%}" class="dropdown-toggle" >
                                 <div class="icon ">
                                     <i class="icon-shopping-cart    "></i>
-                                    {% if cartItemLength > 0%}
-                                    <span class="cart-count">{{cartItemLength}}</span>
-                                    {% endif %}
+                                    <span class="cart-count">{{count}}</span>
                                 </div>
                                 <p>Cart</p>
                             </a>
