@@ -37,7 +37,7 @@ def logIn(request):
             # Authentication failed, show an error message
             else:
                 message = "Username or password is Incorrect"
-                return render(request, 'shop/login.html', {'message': message})
+                return render(request, 'shop/login.html', {'message': message,'username':username,'password':password})
 
     return render(request, 'shop/login.html')
 

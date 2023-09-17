@@ -18,12 +18,12 @@
                             {%endif%}
                             <div class="form-group">
                                 <label for="register-email-2">Username *</label>
-                                <input type="text" class="form-control" id="register-email-2" name="username" required>
+                                <input type="text" class="form-control" id="register-email-2" value = "{{username}}" name="username" required>
                             </div><!-- End .form-group -->
 
                             <div class="form-group">
                                 <label for="register-password-2">Password *</label>
-                                <input type="password" class="form-control" id="register-password-2" name="password" required>
+                                <input type="password" class="form-control" id="register-password-2"  name="password" required>
                             </div><!-- End .form-group -->
 
                             <div class="form-footer">   
@@ -31,7 +31,7 @@
                                     <span>Login</span>
                                     <i class="icon-long-arrow-right"></i>
                                 </button>
-                            <span>Already Have an Account?</span>  <a href = "{%url 'shop:signup'%}"><span style = "margin-left:10px;">Sign in</span> </a>   
+                            <span>Don't Have an Account?</span>  <a href = "{%url 'shop:signup'%}"><span style = "margin-left:10px;">Sign Up</span> </a>   
                             </div><!-- End .form-footer -->
                             
                         </form>
