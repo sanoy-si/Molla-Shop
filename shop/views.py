@@ -34,14 +34,14 @@ def logIn(request):
 
                 products = {}
 
-                # try:
-                cart = Cart.objects.get(cart_id = _cart_id(request))
-                cart_item = CartItem.objects.filter(cart = cart)
-                for item in cart_item:
-                    products[item.product.title] = item.id
-                        
-                # except:
-                #     pass
+                try:
+                    cart = Cart.objects.get(cart_id = _cart_id(request))
+                    cart_item = CartItem.objects.filter(cart = cart)
+                    for item in cart_item:
+                        products[item.product.title] = item.id
+                            
+                except:
+                    pass
 
 
 
@@ -155,7 +155,6 @@ def cart(request):
 
         if request.user.is_authenticated:
             if action == "add":
-                print('hi')
                 try:
                     cart_item = CartItem.objects.get(product = product, customer__id = request.user.id)
                     cart_item.quantity += 1
@@ -172,12 +171,12 @@ def cart(request):
                 if cart_item.quantity>product.inventory:
                     cart_item.quantity = product.inventory
 
-                return redirect("shop:cart")
-
             elif action == "remove":
                 CartItem.objects.filter(product=product,customer__id = request.user.id).delete()
+                return JsonResponse("Added To Cart",safe=False)
+
+
         
-            return JsonResponse(cart.cart_id,safe=False)
         
         else:
             if action == "add":
@@ -196,13 +195,11 @@ def cart(request):
                     if cart_item.quantity>product.inventory:
                         cart_item.quantity = product.inventory
                         
-                return redirect("shop:cart")
 
             elif action == "remove":
                 CartItem.objects.filter(product=product,cart=cart).delete()
-
+                return JsonResponse("Added To Cart",safe=False)
             
-                return JsonResponse(cart.cart_id,safe=False)
 
 def addFromProduct(request,productId):
     
@@ -234,8 +231,6 @@ def addFromProduct(request,productId):
             if cart_item.quantity>product.inventory:
                 cart_item.quantity = product.inventory
 
-            return redirect(reverse("shop:product",args=[int(productId)]))
-    
     else:
 
         try:
@@ -253,9 +248,9 @@ def addFromProduct(request,productId):
 
         if cart_item.quantity>product.inventory:
             cart_item.quantity = product.inventory
+    
 
-        return redirect(reverse("shop:product",args=[int(productId)]))
-        
+    return redirect("shop:cart")
 
 def setcart(request):
     
@@ -288,7 +283,6 @@ def setcart(request):
         #     )
         #     cart_item.save()
 
-        return JsonResponse(cart.cart_id,safe=False)
     else:
         
         # try:
@@ -303,7 +297,8 @@ def setcart(request):
         #     )
         #     cart_item.save()
 
-        return JsonResponse(cart.cart_id,safe=False)
+
+    return JsonResponse(cart.cart_id,safe=False)
 
 
 def account(request,username):
