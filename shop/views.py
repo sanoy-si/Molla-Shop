@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+import requests
 from .forms import *
 
 import json
@@ -71,7 +73,15 @@ def logIn(request):
 
 
                 login(request, user)
-                return redirect('shop:index')  # Replace 'home' with your desired URL
+
+                url = request.META.get("HTTP_REFERER")
+                try:
+                    query = requests.utils.urlparse(url).query
+                    params = dict([x.split('=') for x in query.split('&')])
+                    if 'next' in params:
+                        return redirect(params['next'])
+                except:
+                    return redirect('shop:account', username = user.username)
 
             # Authentication failed, show an error message
             else:
@@ -338,8 +348,30 @@ def account(request,username):
     else:form = EditForm(instance = customerInstance)
     return render(request,"shop/account.html",{'form':form,'customer':customerInstance})
 
+
+@login_required(login_url='shop:login')
 def checkout(request):
-    return render(request,"shop/checkout.html")
+    if request.method != "POST":
+        country_vat = 0.15
+        subtotal = 0
+        total_quantitiy = 0
+
+        try:
+            if request.user.is_authenticated:
+                cart_items = CartItem.objects.filter(customer__id = request.user.id)
+
+            else:
+                cart = Cart.objects.get(cart_id = _cart_id(request))
+                cart_items = CartItem.objects.filter(cart = cart)
+
+            for cart_item in cart_items:
+                subtotal += (float(cart_item.product.unit_price) * cart_item.quantity)
+                total_quantitiy += cart_item.quantity
+        except ObjectDoesNotExist:
+            cart_items = None
+            
+        total = subtotal + subtotal * country_vat
+    return render(request,"shop/checkout.html",{'cart_items':cart_items,'total':total,'total_quantity':total_quantitiy})
 
 def product(request,product_id):
     product = Product.objects.get(pk = product_id)
