@@ -81,3 +81,8 @@ class EditForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"email"}),
             'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'register-email-2','type':"text"}),
         }
+        # def clean_email(self):
+        #     email = self.cleaned_data['email']
+        #     if 1:
+        #         raise forms.ValidationError('This email is already taken. Please choose a different one.')
+        #     return email

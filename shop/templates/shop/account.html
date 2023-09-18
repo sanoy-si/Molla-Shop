@@ -46,28 +46,59 @@
 			                					</div><!-- End .col-sm-6 -->
 			                				</div><!-- End .row -->
 
-		            						<label>Username *</label>
-											{{form.username}}
-											{% if form.username.errors %}
-												<div class="error" style = "color:red;">{{ form.username.errors }}</div>
-											{% endif %}
-		            						{% comment %} <input type="text" name = "userName" class="form-control"value = "{{customer.username}}" required> {% endcomment %}
-		            						
-		                					<label>Email address *</label>
-											{{form.email}}
-											{% if form.email.errors %}
-												<div class="error" style = "color:red;">{{ form.email.errors }}</div>
-											{% endif %}
-		        							{% comment %} <input type="email" name = "email"class="form-control" value = "{{customer.email}}" required> {% endcomment %}
+											<div class = row>
 
-											<label>Phone No </label>
-		        							<input type="phone" name = "phone"value = "{{customer.phone}}" class="form-control" >
+												<div class = col-sm-6>
+													<label>Username *</label>
+													{{form.username}}
+													{% if form.username.errors %}
+														<div class="error" style = "color:red;">{{ form.username.errors }}</div>
+													{% endif %}
+													{% comment %} <input type="text" name = "userName" class="form-control"value = "{{customer.username}}" required> {% endcomment %}
+												</div>
 
-											<label>Address </label>
-		        							<input type="text" name = "address"class="form-control" value = "{{customer.address}}">
+												<div class = col-sm-6>
+													<label>Email address *</label>
+													{{form.email}}
+													{% if form.email.errors %}
+														<div class="error" style = "color:red;">{{ form.email.errors }}</div>
+													{% endif %}
+													{% comment %} <input type="email" name = "email"class="form-control" value = "{{customer.email}}" required> {% endcomment %}
+												</div>
+											</div>
 
-											<label>Postal Code </label>
-		        							<input type="text" name = "postal_code"class="form-control" value = "{{customer.postal_code}} ">
+											<div class = row>
+
+												<div class = col-sm-6>
+													<label>Phone No </label>
+													<input type="phone" name = "phone"{% if customer.phone %} value = "{{customer.phone}}" {% else %} placeholder = "Country" {%endif%} class="form-control" >
+												</div>
+
+												<div class = col-sm-6>	
+													<label>Postal Code </label>
+													<input type="text" name = "postal_code"class="form-control" {% if customer.postal_code %} value = "{{customer.country}}" {% else %} placeholder = "Postal code" {%endif%}> 
+												</div>
+											</div>
+
+
+											<div class = row>
+												<div class = col-sm-4>
+													<label>Country </label>
+													<input type="text" name = "country" class="form-control" {% if customer.country %} value = "{{customer.country}}" {% else %} placeholder = "Country" {%endif%}>
+												</div>
+
+												<div class = col-sm-4>
+													<label>State </label>
+													<input type="text" name = "state" class="form-control" {% if customer.state %} value = "{{customer.state}}" {% else %} placeholder = "State" {%endif%}>
+												</div>
+
+
+												<div class = col-sm-4>
+													<label>Town/City </label>
+													<input type="text" name = "town" class="form-control" {% if customer.town %} value = "{{customer.town}}" {% else %} placeholder = "Town" {%endif%}>
+												</div>
+											</div>
+
 
 		            						<label>Current password (leave blank to leave unchanged)</label>
 		            						<input type="password" name = "current_password" class="form-control">

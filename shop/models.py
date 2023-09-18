@@ -24,8 +24,11 @@ class Product(models.Model):
 
 class Customer(AbstractUser):
     phone = models.CharField(max_length=255,null=True)
-    address = models.CharField(max_length=255,null=True)
-    postal_code = models.CharField(max_length=10,null=True)
+    country = models.CharField(max_length=255,null=True)
+    postal_code = models.CharField(max_length=50,null=True)
+    town = models.CharField(max_length=255,null=True)
+    state = models.CharField(max_length=255,null=True)
+
 
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name

@@ -318,15 +318,21 @@ def account(request,username):
         form = EditForm(request.POST,instance = customerInstance)
         if form.is_valid():
             phone = request.POST.get("phone")
-            address = request.POST.get("address")
+            country = request.POST.get("country")
+            town = request.POST.get("town")
+            state = request.POST.get("state")
             postal_code = request.POST.get("postal_code")
             current_password = request.POST.get("current_password")
             new_password = request.POST.get("new_password")
             confirm_password = request.POST.get("confirm_password")
 
             if phone:customerInstance.phone = phone
-            if address:customerInstance.address = address
+            if country:customerInstance.country = country
+            if state:customerInstance.state = state
+            if town:customerInstance.town = town
             if postal_code:customerInstance.postal_code = postal_code
+
+
             if current_password:
                 user = authenticate(username=form.cleaned_data["username"],password = current_password)
                 if not customerInstance.check_password(current_password):
@@ -342,10 +348,13 @@ def account(request,username):
                     return render (request,"shop/account.html",{'form':form,'confmessage':confmessage,'customer':customerInstance})
                 customerInstance.set_password(new_password)
                 customerInstance.save()
+                return redirect("shop:login")
+
                 # login(request,customerInstance)
             customerInstance.save()
-            return redirect("shop:login")
-    else:form = EditForm(instance = customerInstance)
+            return render (request,"shop/account.html",{'form':form,'customer':customerInstance})
+
+    else:form = EditForm(instance = customerInstance)   
     return render(request,"shop/account.html",{'form':form,'customer':customerInstance})
 
 
