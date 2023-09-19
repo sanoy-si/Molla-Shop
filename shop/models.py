@@ -38,16 +38,32 @@ class Customer(AbstractUser):
 
 class Order(models.Model):
 
+    PAYMENT_STATUS_PENDING = 'P'
+    PAYMENT_STATUS_COMPLETE = 'C'
+    PAYMENT_STATUS_FAILED = 'F'
+    PAYMENT_STATUS_CHOICES = [
+        (PAYMENT_STATUS_PENDING, 'Pending'),
+        (PAYMENT_STATUS_COMPLETE, 'Complete'),
+        (PAYMENT_STATUS_FAILED, 'Failed')
+    ]
+    payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOICES, default=PAYMENT_STATUS_PENDING)
     placed_at = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     complete = models.BooleanField(default=True)
     phone = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=10)
+    town = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    email = models.EmailField()
+    total =models.BigIntegerField()
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
 
 
     def __str__(self) -> str:
-        return self.placed_at + ' ' + self.customer
+        return self.customer.first_name
 
 
 
@@ -57,6 +73,10 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+
+    def __str__(self):
+        return self.product.title
 
 
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
@@ -354,13 +354,20 @@ def account(request,username):
             customerInstance.save()
             return render (request,"shop/account.html",{'form':form,'customer':customerInstance})
 
-    else:form = EditForm(instance = customerInstance)   
-    return render(request,"shop/account.html",{'form':form,'customer':customerInstance})
+    else:
+        form = EditForm(instance = customerInstance)  
+        orders = Order.objects.filter(customer__id = request.user.id) 
+    return render(request,"shop/account.html",{'form':form,'customer':customerInstance,"orders":orders})
+
+def myOrders(request):
+    orders = Order.objects.filter(customer__id = request.user.id)
+    return render(request,"shop/account.html",{"orders":orders})
+
 
 
 @login_required(login_url='shop:login')
 def checkout(request):
-    if request.method != "POST":
+    # if request.method != "POST":
         country_vat = 0.15
         subtotal = 0
         total_quantitiy = 0
@@ -380,7 +387,65 @@ def checkout(request):
             cart_items = None
             
         total = subtotal + subtotal * country_vat
-    return render(request,"shop/checkout.html",{'cart_items':cart_items,'total':total,'total_quantity':total_quantitiy})
+        
+        return render(request,"shop/checkout.html",{'cart_items':cart_items,'total':total,'total_quantity':total_quantitiy,"customer":Customer.objects.get(username = request.user.username)})
+
+@login_required
+def order(request):
+
+    if request.method == "POST":
+            
+
+        country_vat = 0.15
+        subtotal = 0
+
+        try:
+            if request.user.is_authenticated:
+                cart_items = CartItem.objects.filter(customer__id = request.user.id)
+
+            else:
+                cart = Cart.objects.get(cart_id = _cart_id(request))
+                cart_items = CartItem.objects.filter(cart = cart)
+
+            for cart_item in cart_items:
+                subtotal += (float(cart_item.product.unit_price) * cart_item.quantity)
+        except ObjectDoesNotExist:
+            cart_items = None
+            
+
+        total = subtotal + subtotal * country_vat
+
+        order = Order.objects.create(
+        
+            phone = request.POST.get("phone"),
+            country = request.POST.get("country"),
+            town = request.POST.get("town"),
+            state = request.POST.get("state"),
+            postal_code = request.POST.get("postal_code"),
+            first_name = request.POST.get("first_name"),
+            last_name = request.POST.get("last_name"),
+            email = request.POST.get("email"),
+            payment_status = "C",
+            customer = Customer.objects.get(username = request.user.username),
+            total = total
+        )
+        order.save()
+
+        cart_items = CartItem.objects.filter(customer__id = request.user.id)
+        for cart_item in cart_items:
+            order_item = OrderItem.objects.create(
+                order = order,
+                product = cart_item.product,
+                quantity = cart_item.quantity,
+                unit_price = cart_item.product.unit_price
+            )
+            order_item.save()
+
+
+
+        return HttpResponse("Success!")
+        
+
 
 def product(request,product_id):
     product = Product.objects.get(pk = product_id)

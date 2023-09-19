@@ -19,6 +19,10 @@ urlpatterns = [
     path('addFromProduct/<int:productId>',views.addFromProduct, name = "addFromProduct"),
     path('setcart/',views.setcart, name = "setcart"),
     path('signout/',views.logOut, name = "signout"),
+    path('order/',views.order, name = "order"),
+    path('orders/',views.myOrders, name = "orders"),
+
+
 
 
     

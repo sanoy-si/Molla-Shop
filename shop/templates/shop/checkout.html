@@ -12,52 +12,52 @@
 <div class="page-content">
     <div class="checkout">
         <div class="container">
-            <form action="#">
+            <form action="{% url 'shop:order' %}" method = "post">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-6">
                         <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>First Name *</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" class="form-control" name = "first_name" value = "{{customer.first_name}}" required>
                                 </div><!-- End .col-sm-6 -->
 
                                 <div class="col-sm-6">
                                     <label>Last Name *</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text"  name = "last_name" class="form-control" value = "{{customer.last_name}}" required>
                                 </div><!-- End .col-sm-6 -->
                             </div><!-- End .row -->
 
                             <label>Email *</label>
-                            <input type="email" class="form-control" required>
+                            <input type="email" name = "email"class="form-control" value = "{{customer.email}}" required>
 
                             <label>Country *</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name = "country" class="form-control" {% if customer.country %} value = "{{customer.country}}" {% else %} placeholder = "Country" {%endif%} required>
 
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>State *</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" name = "state" class="form-control" {% if customer.state %} value = "{{customer.state}}" {% else %} placeholder = "State" {%endif%}>
                                 </div><!-- End .col-sm-6 -->
 
                                 <div class="col-sm-6">
                                     <label>Town / City *</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" name = "town" class="form-control" {% if customer.town %} value = "{{customer.town}}" {% else %} placeholder = "Town" {%endif%}>
                                 </div><!-- End .col-sm-6 -->
                             </div><!-- End .row -->
 
                             <div class="row">
                                 <div class="col-sm-6">
                                     <label>Postcode / ZIP *</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" name = "postal_code"class="form-control" {% if customer.postal_code %} value = "{{customer.postal_code}}" {% else %} placeholder = "Postal code" {%endif%}> 
                                 </div><!-- End .col-sm-6 -->
 
                                 <div class="col-sm-6">
                                     <label>Phone *</label>
-                                    <input type="tel" class="form-control" required>
+                                    <input type="phone" name = "phone"{% if customer.phone %} value = "{{customer.phone}}" {% else %} placeholder = "Phone" {%endif%} class="form-control" >
                                 </div><!-- End .col-sm-6 -->
                             </div><!-- End .row -->
-
                             
 
                     </div><!-- End .col-lg-9 -->
@@ -92,7 +92,7 @@
                             </table><!-- End .table table-summary -->
 
 
-                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" >
                                 <span class="btn-text">Place Order</span>
                                 <span class="btn-hover-text">Proceed to Checkout</span>
                             </button>

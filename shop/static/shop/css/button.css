@@ -1,0 +1,11 @@
+#myButton {
+    /* Styles for the inactive state */
+    opacity: 0.5;
+    pointer-events: none; /* Disable pointer events */
+  }
+  
+  #myActiveButton {
+    /* Styles for the active state */
+    opacity: 1;
+    pointer-events: auto; /* Enable pointer events */
+  }
