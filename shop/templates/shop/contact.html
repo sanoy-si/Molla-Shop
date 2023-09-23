@@ -15,7 +15,7 @@
                 <div class="contact-box text-center">
                     <h3>Office</h3>
 
-                    <address>1 New York Plaza, New York, <br>NY 10004, USA</address>
+                    <address> Bole street, Adama, <br>Oromia, Ethiopia</address>
                 </div><!-- End .contact-box -->
             </div><!-- End .col-md-4 -->
 
@@ -23,8 +23,8 @@
                 <div class="contact-box text-center">
                     <h3>Start a Conversation</h3>
 
-                    <div><a href="/cdn-cgi/l/email-protection#1d3e"><span class="__cf_email__" data-cfemail="bdd4d3dbd2fdf0d2d1d1dc93ded2d0">[email&#160;protected]</span></a></div>
-                    <div><a href="tel:#">+1 987-876-6543</a>, <a href="tel:#">+1 987-976-1234</a></div>
+                    <div><a href="mailto:amyonassintayehu@gmail.com">amyonassintayehu@gmail.com</a></div>
+                    <div><a href="tel:#">+251909759355</a>, <a href="tel:#">+251982846075</a></div>
                 </div><!-- End .contact-box -->
             </div><!-- End .col-md-4 -->
 
@@ -49,34 +49,42 @@
                 <div class="text-center">
                 <h2 class="title mb-1">Get In Touch</h2><!-- End .title mb-2 -->
                 <p class="lead text-primary">
-                    We collaborate with ambitious brands and people; we’d love to build something great together.
+                    We value your feedback and are here to assist you. Please go ahead and type your question or comment below if you have any.
                 </p><!-- End .lead text-primary -->
-                <p class="mb-3">Vestibulum volutpat, lacus a ultrices sagittis, mi neque euismod dui, eu pulvinar nunc sapien ornare nisl. Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.</p>
                 </div><!-- End .text-center -->
 
-                <form action="#" class="contact-form mb-2">
+                <form action="{% url 'shop:message' %}" class="contact-form mb-2" method = "POST">
+                    {% csrf_token %}
                     <div class="row">
-                        <div class="col-sm-4">
-                            <label for="cname" class="sr-only">Name</label>
-                            <input type="text" class="form-control" id="cname" placeholder="Name *" required>
+                        <div class="col-sm-6">
+                            <label for="cfname" class="sr-only">First Name</label>
+                            <input type="text" class="form-control" placeholder="First Name *"  name = "first_name" required>
                         </div><!-- End .col-sm-4 -->
 
-                        <div class="col-sm-4">
-                            <label for="cemail" class="sr-only">Name</label>
-                            <input type="email" class="form-control" id="cemail" placeholder="Email *" required>
+                        <div class="col-sm-6">
+                            <label for="clname" class="sr-only">Last Name</label>
+                            <input type="text" class="form-control" placeholder="Last Name *"  name = "last_name" required>
+                        </div><!-- End .col-sm-4 -->
+                    </div>
+
+                    <div class = "row">
+
+                        <div class="col-sm-6">
+                            <label for="cemail" class="sr-only">Email</label>
+                            <input type="email" class="form-control" id="cemail" placeholder="Email *" name = "email" required>
                         </div><!-- End .col-sm-4 -->
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <label for="cphone" class="sr-only">Phone</label>
-                            <input type="tel" class="form-control" id="cphone" placeholder="Phone">
+                            <input type="tel" class="form-control" id="cphone" placeholder="Phone" name = "phone">
                         </div><!-- End .col-sm-4 -->
                     </div><!-- End .row -->
 
                     <label for="csubject" class="sr-only">Subject</label>
-                    <input type="text" class="form-control" id="csubject" placeholder="Subject">
+                    <input type="text" class="form-control" id="csubject" placeholder="Subject" name = "subject">
 
                     <label for="cmessage" class="sr-only">Message</label>
-                    <textarea class="form-control" cols="30" rows="4" id="cmessage" required placeholder="Message *"></textarea>
+                    <textarea class="form-control" cols="30" rows="4" id="cmessage"  placeholder="Message *" name = message required></textarea>
                     
                     <div class="text-center">
                         <button type="submit" class="btn btn-outline-primary-2 btn-minwidth-sm">

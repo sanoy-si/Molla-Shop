@@ -50,7 +50,7 @@ class Order(models.Model):
     placed_at = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
     complete = models.BooleanField(default=True)
-    phone = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
     country = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=10)
     town = models.CharField(max_length=255)
@@ -97,4 +97,12 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.product.title
+class Message(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
+    phone = models.CharField(max_length=20)
+    subject = models.CharField(max_length=255, null=True)
+    message = models.TextField()
+    
 

@@ -474,6 +474,15 @@ def categories(request,category_id):
     return render(request,"shop/categories.html",{'products': list(products), 'category':category})
 
 
-    
+def message(request):
+    message =Message.objects.create(
+        first_name = request.POST.get("first_name"),
+        last_name = request.POST.get("last_name"),
+        email = request.POST.get("email"),
+        subject = request.POST.get("subject"),
+        message = request.POST.get("message")
+    )    
+    message.save()
+    return redirect("shop:index")
 
 
