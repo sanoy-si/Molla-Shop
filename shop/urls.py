@@ -22,12 +22,6 @@ urlpatterns = [
     path('order/',views.order, name = "order"),
     path('orders/',views.myOrders, name = "orders"),
     path('message/',views.message, name = "message"),
-
-
-
-
-
-    
     
 
 ]

@@ -19,9 +19,11 @@ def index(request):
         limit = 2
         for category in Category.objects.all():
             products.extend(list(Product.objects.filter(category = category,inventory__gt = 0)[:limit]))
-        print(request.session.session_key)
-
         return render(request,"shop/index.html",{'products': products})
+    else:
+        val = request.POST.get("query")
+        products = Product.objects.filter(Q(title__icontains = val) | Q(description__icontains = val))
+        return render(request,"shop/index.html",{'products':products,'search':val})
     
 def logIn(request):
     if request.method == 'POST':
@@ -484,5 +486,7 @@ def message(request):
     )    
     message.save()
     return redirect("shop:index")
+
+
 
 

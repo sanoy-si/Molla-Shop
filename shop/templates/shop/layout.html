@@ -86,8 +86,8 @@
                                 <div class="header-search-wrapper search-wrapper-wide">
                                     <label for="q" class="sr-only">Search</label>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                    <input type="search" class="form-control" name="q" id="q"
-                                        placeholder="Search product ..." required>
+                                    <input type="search" class="form-control" name="query" 
+                                        placeholder="Search product ..." required> 
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -258,9 +258,9 @@
         <div class="mobile-menu-wrapper">
             <span class="mobile-menu-close"><i class="icon-close"></i></span>
 
-            <form action="#" method="get" class="mobile-search">
+            <form action="{% url 'shop:index' %}" method="POST" class="mobile-search">
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search" class="form-control" name="query" id="mobile-search" placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
             
@@ -269,12 +269,7 @@
                     <li  {% if "/" == request.path%} class="megamenu-container active" {% endif%}>
                         <a href="{% url 'shop:index'%}" class="">Home</a>
                     </li>
-                    <li  {% if "signup" in request.path%} class="megamenu-container active" {% endif%}>
-                        <a href="{% url 'shop:signup'%}"" class="">Sign Up</a>
-                    </li>
-                    <li  {% if "login" in request.path%} class="megamenu-container active" {% endif%}>
-                        <a href="{% url 'shop:login'%}"" class="">Log in</a>
-                    </li>
+                  
                     <li  {% if "about" in request.path%} class="megamenu-container active" {% endif%}>
                         <a href="{% url 'shop:about'%}"" class="">About</a>
                     </li>
