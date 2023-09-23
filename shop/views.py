@@ -18,7 +18,7 @@ def index(request):
         products = []
         limit = 2
         for category in Category.objects.all():
-            products.extend(list(Product.objects.filter(category = category)[:limit]))
+            products.extend(list(Product.objects.filter(category = category,inventory__gt = 0)[:limit]))
         print(request.session.session_key)
 
         return render(request,"shop/index.html",{'products': products})
@@ -180,6 +180,8 @@ def cart(request):
 
                 if cart_item.quantity>product.inventory:
                     cart_item.quantity = product.inventory
+                    cart_item.save()
+
 
             elif action == "remove":
                 CartItem.objects.filter(product=product,customer__id = request.user.id).delete()
@@ -204,6 +206,8 @@ def cart(request):
 
                     if cart_item.quantity>product.inventory:
                         cart_item.quantity = product.inventory
+                        cart_item.save()
+
                         
 
             elif action == "remove":
@@ -240,6 +244,8 @@ def addFromProduct(request,productId):
 
             if cart_item.quantity>product.inventory:
                 cart_item.quantity = product.inventory
+                cart_item.save()
+
 
     else:
 
@@ -258,6 +264,7 @@ def addFromProduct(request,productId):
 
         if cart_item.quantity>product.inventory:
             cart_item.quantity = product.inventory
+            cart_item.save()
     
 
     return redirect("shop:cart")
@@ -283,8 +290,11 @@ def setcart(request):
 
         # try:
         cart_item = CartItem.objects.get(product = product,customer__id=request.user.id)
-        cart_item.quantity = value
+        cart_item.quantity = int(value)
         cart_item.save()
+        if cart_item.quantity>product.inventory:
+            cart_item.quantity = product.inventory
+            cart_item.save()
         # except CartItem.DoesNotExist:
         #     cart_item = CartItem.objects.create(
         #         product = product,
@@ -299,6 +309,9 @@ def setcart(request):
         cart_item = CartItem.objects.get(product = product,cart=cart)
         cart_item.quantity = value
         cart_item.save()
+        if cart_item.quantity>product.inventory:
+            cart_item.quantity = product.inventory
+            cart_item.save()
         # except CartItem.DoesNotExist:
         #     cart_item = CartItem.objects.create(
         #         product = product,
@@ -441,9 +454,13 @@ def order(request):
             )
             order_item.save()
 
+            product = Product.objects.get(id = cart_item.product.id)
+            product.inventory -= cart_item.quantity
+            product.save()
 
+        CartItem.objects.filter(customer = request.user).delete()
 
-        return HttpResponse("Success!")
+        return render(request,"shop/success.html")
         
 
 

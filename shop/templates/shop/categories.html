@@ -21,9 +21,14 @@
                                                 <img src="{{product.image.url}}" alt="Product image"
                                                     class="product-image">
                                             </a>
-                                            <div class="product-action action-icon-top">
-                                                <a href="{%url 'shop:cart' %}" data-product = {{product.id}} data-action = "add" class="  btn-product btn-cart update-cart" title="Add to cart"><span>add to
+                                            <div class="product-action {%if product.inventory > 0 %} action-icon-top {% endif %}">
+                                                {% if product.inventory > 0%}
+                                                <a  href="{%url 'shop:cart' %}" data-product = {{product.id}} data-action = "add" class="  btn-product btn-cart update-cart" title="Add to cart"><span >add to
                                                     cart</span></a>
+                                                {%else%}
+                                                <a class="  btn-product  update-cart" title="Add to cart"><strong>Out of Order</strong></a>
+                                                {%endif%}
+
                                             </div><!-- End .product-action -->
                                         </figure><!-- End .product-media -->
 

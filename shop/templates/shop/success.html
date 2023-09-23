@@ -1,0 +1,100 @@
+{%load static%}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Molla - Bootstrap eCommerce Template</title>
+        <meta name="keywords" content="HTML5 Template">
+        <meta name="description" content="Molla - Bootstrap eCommerce Template">
+        <meta name="author" content="p-themes">
+        <!-- Favicon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'shop/images/icons/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'shop/images/icons/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'shop/images/icons/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'shop/images/icons/site.html' %}">
+        <link rel="mask-icon" href="{% static 'shop/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+        <link rel="shortcut icon" href="{% static 'shop/images/icons/favicon.ico' %}">
+        <meta name="apple-mobile-web-app-title" content="Molla">
+        <meta name="application-name" content="Molla">
+        <meta name="msapplication-TileColor" content="#cc9966">
+        <meta name="msapplication-config" content="{% static 'shop/images/icons/browserconfig.xml' %}">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{% static 'shop/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+        <!-- Plugins CSS File -->
+        <link rel="stylesheet" href="{% static 'shop/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'shop/css/plugins/owl-carousel/owl.carousel.css' %}">
+        <link rel="stylesheet" href="{% static 'shop/css/plugins/magnific-popup/magnific-popup.css' %}">
+        <link rel="stylesheet" href="{% static 'shop/css/plugins/jquery.countdown.css' %}">
+        <!-- Main CSS File -->
+        <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'shop/css/skins/skin-demo-3.css' %}">
+        <link rel="stylesheet" href="{% static 'shop/css/demos/demo-3.css' %}">
+        <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+    
+        
+        <script>
+            function getToken(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getToken('csrftoken');
+        </script>
+    
+    </head>
+    <style>
+      body {
+        text-align: center;
+        padding: 40px 0;
+        background: #EBF0F5;
+      }
+        h1 {
+          color: #88B04B;
+          font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+          font-weight: 900;
+          font-size: 40px;
+          margin-bottom: 10px;
+        }
+        p {
+          color: #404F5E;
+          font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+          font-size:20px;
+          margin: 0;
+        }
+      i {
+        color: #9ABC66;
+        font-size: 100px;
+        line-height: 200px;
+        margin-left:-15px;
+      }
+      .card {
+        background: white;
+        padding: 60px;
+        border-radius: 4px;
+        box-shadow: 0 2px 3px #C8D0D8;
+        display: inline-block;
+        margin: 0 auto;
+      }
+    </style>
+    <body>
+      <div class="card">
+      <div style="border-radius:200px; height:200px; width:200px; background: #F8FAF5; margin:0 auto;">
+        <i class="checkmark">✓</i>
+      </div>
+        <h1>Success</h1> 
+        <p>We received your order request;<br/> we'll be in touch shortly!</p>
+        <a href="{%url 'shop:index' %}" class="btn btn-outline-primary-2"><span>Continue Shopping</span></a>
+      </div>
+    </body>
+</html>
