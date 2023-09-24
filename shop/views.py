@@ -187,7 +187,7 @@ def cart(request):
 
             elif action == "remove":
                 CartItem.objects.filter(product=product,customer__id = request.user.id).delete()
-                return JsonResponse("Added To Cart",safe=False)
+            return JsonResponse("Added To Cart",safe=False)
 
 
         
@@ -214,7 +214,8 @@ def cart(request):
 
             elif action == "remove":
                 CartItem.objects.filter(product=product,cart=cart).delete()
-                return JsonResponse("Added To Cart",safe=False)
+            
+            return JsonResponse("Added To Cart",safe=False)
             
 
 def addFromProduct(request,productId):
@@ -269,7 +270,8 @@ def addFromProduct(request,productId):
             cart_item.save()
     
 
-    return redirect("shop:cart")
+    return redirect("shop:product",product_id = productId)
+
 
 def setcart(request):
     

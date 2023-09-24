@@ -6,6 +6,8 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    class Meta:
+        ordering = ['title']
 
 
 class Product(models.Model):
@@ -20,6 +22,8 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    class Meta:
+        ordering = ['title']
 
 
 class Customer(AbstractUser):
@@ -32,6 +36,8 @@ class Customer(AbstractUser):
 
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
+    class Meta:
+        ordering = ['first_name','last_name']
 
 
 
@@ -60,10 +66,10 @@ class Order(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-
+ 
 
     def __str__(self) -> str:
-        return self.customer.first_name
+        return str(self.id)
 
 
 
@@ -98,11 +104,11 @@ class CartItem(models.Model):
     def __str__(self):
         return self.product.title
 class Message(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255)
-    phone = models.CharField(max_length=20)
-    subject = models.CharField(max_length=255, null=True)
-    message = models.TextField()
+    first_name = models.CharField(max_length=255,editable=False)
+    last_name = models.CharField(max_length=255,editable=False)
+    email = models.EmailField(max_length=255,editable=False)
+    phone = models.CharField(max_length=20,editable=False)
+    subject = models.CharField(max_length=255, null=True,editable=False)
+    message = models.TextField(editable=False)
     
 
