@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 import requests
 from .forms import *
 
@@ -15,10 +16,7 @@ from .models import *
 
 def index(request):
     if request.method == "GET":
-        products = []
-        limit = 2
-        for category in Category.objects.all():
-            products.extend(list(Product.objects.filter(category = category,inventory__gt = 0)[:limit]))
+        products = list(Product.objects.annotate(no_sold = Count('ordered')).order_by('-no_sold'))
         return render(request,"shop/index.html",{'products': products})
     else:
         val = request.POST.get("query")
