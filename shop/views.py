@@ -16,7 +16,7 @@ from .models import *
 
 def index(request):
     if request.method == "GET":
-        products = list(Product.objects.annotate(no_sold = Count('ordered')).order_by('-no_sold'))
+        products = list(Product.objects.annotate(no_sold = Count('ordered')).order_by('-no_sold').filter(inventory__gt = 0))
         return render(request,"shop/index.html",{'products': products})
     else:
         val = request.POST.get("query")

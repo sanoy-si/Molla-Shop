@@ -31,21 +31,26 @@
 
                             <div class="product-details-action">
                                 <div class="details-action-col">
-                                    <form action = "{% url 'shop:addFromProduct' product.id%}" method = "post">
-                                        {% csrf_token %}
-                                        <div class="product-details-quantity">
-                                            <input name = quantity type="number" id="qty" class="form-control" value="1" min="1" max="{{product.inventory}}" step="1" data-decimals="0" required style = "display: inline-block;">
-                                        </div><!-- End .product-details-quantity -->
+                                    {% if product.inventory > 0%}
+                                        <form action = "{% url 'shop:addFromProduct' product.id%}" method = "post">
+                                            {% csrf_token %}
+                                            <div class="product-details-quantity">
+                                                <input name = quantity type="number" id="qty" class="form-control" value="1" min="1" max="{{product.inventory}}" step="1" data-decimals="0" required style = "display: inline-block;">
+                                            </div><!-- End .product-details-quantity -->
 
-                                        <button type = submit style = "display: inline-block;
-                                        border: none;
-                                        padding: 0;
-                                        margin: 0;
-                                        width: 50px;
-                                        height: 50px;
-                                      " class="btn-product btn-cart">add to cart</button>
+                                            <button type = submit style = "display: inline-block;
+                                            border: none;
+                                            padding: 0;
+                                            margin: 0;
+                                            width: 50px;
+                                            height: 50px;
+                                        " class="btn-product btn-cart">add to cart</button>
 
-                                     </form>
+                                        </form>
+                                    {% else%}
+                                        <h5 style = "color:red"> Product Out of Order </h5>
+                                    {%endif%}
+                                    
 
                                 </div><!-- End .details-action-col -->
                             </div><!-- End .product-details-action -->
