@@ -2,15 +2,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-
-<!-- molla/index-3.html  22 Nov 2019 09:55:42 GMT -->
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>Molla Shop</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -39,7 +35,7 @@
     <link rel="stylesheet" href="{% static 'shop/css/new.css' %}">
     <link rel="stylesheet" href="{% static 'shop/css/button.css' %}">
 
-    
+
     <script>
         function getToken(name) {
             let cookieValue = null;
@@ -86,8 +82,8 @@
                                 <div class="header-search-wrapper search-wrapper-wide">
                                     <label for="q" class="sr-only">Search</label>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                                    <input type="search" class="form-control" name="query" 
-                                        placeholder="Search product ..." required> 
+                                    <input type="search" class="form-control" name="query"
+                                        placeholder="Search product ..." required>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -102,7 +98,7 @@
                                     </div>
                                     <p>Account</p>
                                 </a>
-                            
+
                             {%else%}
                                 <a href="{%url 'shop:login' %}" title="Login">
                                     <div class="icon">
@@ -141,7 +137,7 @@
                                 <nav class="side-nav">
                                     <ul class="menu-vertical sf-arrows">
                                         {% for category in categories%}
-                                            <li><a href= "{% url 'shop:categories' category.id  %}">{{category.title}} </a></li>  
+                                            <li><a href= "{% url 'shop:categories' category.id  %}">{{category.title}} </a></li>
                                         {% endfor %}
                                     </ul><!-- End .menu-vertical -->
                                 </nav><!-- End .side-nav -->
@@ -155,7 +151,7 @@
                                 <li  {% if "/" == request.path%} class="megamenu-container active" {% endif%}>
                                     <a href="{% url 'shop:index'%}" class="">Home</a>
                                 </li>
-                              
+
                                 <li  {% if "about" in request.path%} class="megamenu-container active" {% endif%}>
                                     <a href="{% url 'shop:about'%}"" class="">About</a>
                                 </li>
@@ -257,13 +253,13 @@
                 <input type="search" class="form-control" name="query" id="mobile-search" placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
-            
+
             <nav class="mobile-nav">
                 <ul class="mobile-menu">
                     <li  {% if "/" == request.path%} class="megamenu-container active" {% endif%}>
                         <a href="{% url 'shop:index'%}" class="">Home</a>
                     </li>
-                  
+
                     <li  {% if "about" in request.path%} class="megamenu-container active" {% endif%}>
                         <a href="{% url 'shop:about'%}"" class="">About</a>
                     </li>
@@ -282,7 +278,7 @@
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
-   
+
 
     <!-- Plugins JS File -->
     <script src="{% static 'shop/js/jquery.min.js' %}"></script>

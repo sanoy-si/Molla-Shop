@@ -22,7 +22,7 @@ def index(request):
         val = request.POST.get("query")
         products = Product.objects.filter(Q(title__icontains = val) | Q(description__icontains = val))
         return render(request,"shop/index.html",{'products':products,'search':val})
-    
+
 def logIn(request):
     if request.method == 'POST':
             username = request.POST.get('username')
@@ -41,7 +41,7 @@ def logIn(request):
                     cart_item = CartItem.objects.filter(cart = cart)
                     for item in cart_item:
                         products[item.product.title] = item.id
-                            
+
                 except:
                     pass
 
@@ -52,8 +52,6 @@ def logIn(request):
                 for item in cart_item:
                     exisiting_products[item.product.title] = item.id
 
-
-                print(exisiting_products,products)
                 for product in products.keys():
                     if product in exisiting_products:
                         print(exisiting_products,product)
@@ -110,7 +108,7 @@ def signup(request):
 
 def logOut(request):
     logout(request)
-    return redirect('shop:index') 
+    return redirect('shop:index')
 
 def contact(request):
     return render(request,"shop/contact.html")
@@ -144,7 +142,7 @@ def cart(request):
                 subtotal += (float(cart_item.product.unit_price) * cart_item.quantity)
         except ObjectDoesNotExist:
             cart_items = None
-            
+
 
         total = subtotal + subtotal * country_vat
         return render(request,"shop/cart.html",{'cart_items':cart_items,'total':total,'subtotal':subtotal,'vat':country_vat*subtotal})
@@ -174,7 +172,7 @@ def cart(request):
                         product = product,
                         cart = cart,
                         quantity = 1,
-                        customer = Customer.objects.get(id = request.user.id) 
+                        customer = Customer.objects.get(id = request.user.id)
                     )
                     cart_item.save()
 
@@ -188,8 +186,8 @@ def cart(request):
             return JsonResponse("Added To Cart",safe=False)
 
 
-        
-        
+
+
         else:
             if action == "add":
                 try:
@@ -208,16 +206,16 @@ def cart(request):
                         cart_item.quantity = product.inventory
                         cart_item.save()
 
-                        
+
 
             elif action == "remove":
                 CartItem.objects.filter(product=product,cart=cart).delete()
-            
+
             return JsonResponse("Added To Cart",safe=False)
-            
+
 
 def addFromProduct(request,productId):
-    
+
     quantity = int(request.POST.get("quantity"))
     product = Product.objects.get(id = int(productId))
 
@@ -229,7 +227,7 @@ def addFromProduct(request,productId):
                 )
         cart.save()
     if request.user.is_authenticated:
-            
+
             try:
                 cart_item = CartItem.objects.get(product = product, customer__id = request.user.id)
                 cart_item.quantity += quantity
@@ -266,14 +264,14 @@ def addFromProduct(request,productId):
         if cart_item.quantity>product.inventory:
             cart_item.quantity = product.inventory
             cart_item.save()
-    
+
 
     return redirect("shop:product",product_id = productId)
 
 
 def setcart(request):
-    
-    
+
+
     data = json.loads(request.body)
     productId = data['productId']
     value = data['value']
@@ -306,7 +304,7 @@ def setcart(request):
         #     cart_item.save()
 
     else:
-        
+
         # try:
         cart_item = CartItem.objects.get(product = product,cart=cart)
         cart_item.quantity = value
@@ -351,7 +349,7 @@ def account(request,username):
             if current_password:
                 user = authenticate(username=form.cleaned_data["username"],password = current_password)
                 if not customerInstance.check_password(current_password):
-                    passmessage = "Wrong password" 
+                    passmessage = "Wrong password"
                     return render(request,"shop/account.html",{'form':form,'passmessage':passmessage,'customer':customerInstance})
             if new_password:
                 if not current_password:
@@ -370,8 +368,8 @@ def account(request,username):
             return render (request,"shop/account.html",{'form':form,'customer':customerInstance})
 
     else:
-        form = EditForm(instance = customerInstance)  
-        orders = Order.objects.filter(customer__id = request.user.id) 
+        form = EditForm(instance = customerInstance)
+        orders = Order.objects.filter(customer__id = request.user.id)
     return render(request,"shop/account.html",{'form':form,'customer':customerInstance,"orders":orders})
 
 def myOrders(request):
@@ -400,16 +398,16 @@ def checkout(request):
                 total_quantitiy += cart_item.quantity
         except ObjectDoesNotExist:
             cart_items = None
-            
+
         total = subtotal + subtotal * country_vat
-        
+
         return render(request,"shop/checkout.html",{'cart_items':cart_items,'total':total,'total_quantity':total_quantitiy,"customer":Customer.objects.get(username = request.user.username)})
 
 @login_required
 def order(request):
 
     if request.method == "POST":
-            
+
 
         country_vat = 0.15
         subtotal = 0
@@ -426,12 +424,12 @@ def order(request):
                 subtotal += (float(cart_item.product.unit_price) * cart_item.quantity)
         except ObjectDoesNotExist:
             cart_items = None
-            
+
 
         total = subtotal + subtotal * country_vat
 
         order = Order.objects.create(
-        
+
             phone = request.POST.get("phone"),
             country = request.POST.get("country"),
             town = request.POST.get("town"),
@@ -463,15 +461,15 @@ def order(request):
         CartItem.objects.filter(customer = request.user).delete()
 
         return render(request,"shop/success.html")
-        
+
 
 
 def product(request,product_id):
-    product = Product.objects.get(pk = product_id)
+    product = get_object_or_404(Product,pk = product_id)
     return render(request,"shop/product.html",{"product":product})
 
 def categories(request,category_id):
-    category = Category.objects.get(pk = category_id)
+    category = get_object_or_404(Category,pk = category_id)
     products = category.products.all()
     return render(request,"shop/categories.html",{'products': list(products), 'category':category})
 
@@ -483,7 +481,7 @@ def message(request):
         email = request.POST.get("email"),
         subject = request.POST.get("subject"),
         message = request.POST.get("message")
-    )    
+    )
     message.save()
     return redirect("shop:index")
 
