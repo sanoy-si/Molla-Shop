@@ -26,38 +26,46 @@ This project is an online shopping website built using Django for the backend an
 
 ### Installation
 
-1. Clone the repository:
 
+1. **Clone the repository**:
     ```bash
     git clone https://github.com/sanoy-si/Molla-Shop.git
     cd Molla-Shop
     ```
 
-2. Install the required Python packages:
+2. **Create a virtual environment**:
+    ```bash
+    python -m venv venv
+    ```
 
+3. **Activate the virtual environment**:
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+
+4. **Install the required Python packages**:
     ```bash
     pip install -r requirements.txt
     ```
 
-    ```
-
-3. Apply the database migrations:
-
+5. **Apply the database migrations**:
     ```bash
     python manage.py migrate
     ```
 
-4. Create a superuser to access the admin panel:
-
+6. **Create a superuser to access the admin panel**:
     ```bash
     python manage.py createsuperuser
     ```
 
-5. Collect static files:
-
+7. **Collect static files**:
     ```bash
     python manage.py collectstatic
-    ```
 
 ### Running the Development Server
 
@@ -69,4 +77,5 @@ python manage.py runserver
 ### Visit http://127.0.0.1:8000/ in your web browser to see the application in action
 
 
-https://github.com/user-attachments/assets/60244cec-0092-4460-bed1-9266f4b0913c
+![molla-shop](https://github.com/user-attachments/assets/ea27d413-99fd-496e-b1b3-adba45fdf7f2)
+
