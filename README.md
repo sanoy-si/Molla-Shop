@@ -75,7 +75,6 @@ Start the Django development server:
 python manage.py runserver
 ```
 ### Visit http://127.0.0.1:8000/ in your web browser to see the application in action
+![molla-shop2](https://github.com/user-attachments/assets/af27d8e6-d557-4eb4-b1d9-49a7565cf365)
 
-
-![molla-shop](https://github.com/user-attachments/assets/ea27d413-99fd-496e-b1b3-adba45fdf7f2)
 
